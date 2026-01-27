@@ -2,12 +2,12 @@ package basic;
 
 public class String_overwrite {
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        Solution2 solution = new Solution2();
         String result = solution.solution("Hello World!", "12345", 3);
         System.out.println(result);
     }
 }
-class Solution {
+class Solution2 {
     public String solution(String my_string, String overwrite_string, int s) {
         String answer = "";
 
