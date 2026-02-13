@@ -1,9 +1,5 @@
 package basic;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Overlines {
     public static void main(String[] args) {
         Solution14 solu = new Solution14();
@@ -58,7 +54,6 @@ class Solution14 {
                 count++;
             }
         }
-        if(count == 0) return -1;
-        else return count;
+        return count;
     }
 }
