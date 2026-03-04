@@ -63,10 +63,10 @@ class Solution {
 
         //정렬
         mats = Arrays.stream(mats)
-                .boxed()
-                .sorted(Collections.reverseOrder())
-                .mapToInt(Integer::intValue)
-                .toArray();
+                .boxed() //integer로 변환
+                .sorted(Collections.reverseOrder())// 정렬
+                .mapToInt(Integer::intValue)// int로 변환
+                .toArray(); // int 배열로 변환
 
         System.out.println(Arrays.toString(mats));
         for(int mat : mats){
