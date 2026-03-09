@@ -22,9 +22,7 @@ class Solution {
 
         for(int i = k; i > 0; i--){
             for(int j = 0; j <= score.length-1; j++){
-                if(i == score[j]){
-                    count++;
-                }
+                if(i == score[j]) count++;
                 if(count == m){
                     profit += (i * m);
                     count = 0;
