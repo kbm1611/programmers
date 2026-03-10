@@ -26,38 +26,34 @@ public class DartGame1 {
 class Solution {
     public int solution(String dartResult) {
         int answer = 0;
-        List<String> rounds = new ArrayList<>();
-        Pattern pattern = Pattern.compile("[0-9]+[SDT][*#]?");
-        Matcher matcher = pattern.matcher(dartResult);
-
-        while(matcher.find()){
-            rounds.add(matcher.group());
-        }
-        int[] effects = new int[rounds.size()]; // *, # 효과 처리 배열
-        int[] numbers = new int[rounds.size()]; // 숫자 배열
+        String[] dart = dartResult.split("(?<=[SDT*#])(?=[0-9])");
+        System.out.println(Arrays.toString(dart));
+        
+        int[] effects = new int[dart.length]; // *, # 효과 처리 배열
+        int[] numbers = new int[dart.length]; // 숫자 배열
 
         Arrays.fill(effects, 1);
 
         // effect 배열 만들기
-        for(int i = 0; i <= rounds.size()-1; i++){
-            if(rounds.get(i).charAt(rounds.get(i).length()-1) == '*'){
+        for(int i = 0; i <= dart.length-1; i++){
+            if(dart[i].charAt(dart[i].length()-1) == '*'){
                 if(i > 0){ // 앞앞과 앞이 있음.
                     effects[i-1] *= 2;
                     effects[i] *= 2;
                 }else{
                     effects[i] *= 2;
                 }
-            }else if(rounds.get(i).charAt(rounds.get(i).length()-1) == '#'){
+                dart[i] = dart[i].replace("*", "");
+            }else if(dart[i].charAt(dart[i].length()-1) == '#'){
                 effects[i] *= -1;
+                dart[i] = dart[i].replace("#", "");
             }
         }
-        rounds.replaceAll(item -> item.replaceAll("[*#]", ""));
         System.out.println(Arrays.toString(effects));
-        System.out.println(rounds);
 
-        for(int i = 0; i <= rounds.size()-1; i++){
-            char ch = rounds.get(i).charAt(rounds.get(i).length()-1); // S,D,T
-            int num = Integer.parseInt(rounds.get(i).replaceAll("[^0-9]", ""));
+        for(int i = 0; i <= dart.length-1; i++){
+            char ch = dart[i].charAt(dart[i].length()-1); // S,D,T
+            int num = Integer.parseInt(dart[i].replaceAll("[^0-9]", ""));
             System.out.println(ch);
             if(ch == 'S'){
                 numbers[i] = num;
