@@ -1,11 +1,13 @@
 package level1.madehamberger;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
 public class MadeHamberger {
     public static void main(String[] args) {
         Solution sol = new Solution();
+
         int result = sol.solution(new int[]{2,1,1,2,3,1,2,3,1});
         System.out.println("result = " + result);
     }
@@ -18,27 +20,21 @@ public class MadeHamberger {
 class Solution {
     public int solution(int[] ingredient) {
         int answer = 0;
-        int[] temp = new int[4];
         Stack<Integer> stack = new Stack<>();
 
-        int index =0;
-        int CurrentPos = 0;
-        while(index != ingredient.length-1){
-            if(temp[3] == 0){ // temp 마지막 값이 없다면
-                temp[CurrentPos] = ingredient[index];
-                stack.push(ingredient[index]);
-                CurrentPos++;
-                index++;
-            }
-            if(temp[3] != 0){ // temp[3] 에 값이 들어오면
-                if(temp[0] == 1 && temp[1] == 2 && temp[2] == 3 && temp[3] == 1){ // 햄버거를 만들면
-                    temp[0] = stack.pop(); // 마지막 값 넣기
-                    temp[1] = 0; temp[2] = 0; temp[3] = 0;
-                    CurrentPos = 1;
+        for(int food : ingredient){
+            stack.push(food);
+            if(stack.size() >= 4){
+                int size = stack.size();
+                if(stack.get(size - 4) == 1
+                        && stack.get(size - 3) == 2
+                        && stack.get(size - 2) == 3
+                        && stack.get(size - 1) == 1){
                     answer++;
-                }else{
-                    temp[0] = 0; temp[1] = 0; temp[2] = 0; temp[3] = 0;
-                    CurrentPos = 0; //temp 인덱스 초기화 및 값 비우기
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
                 }
             }
         }
