@@ -1,8 +1,6 @@
 package level1.workoutCloth;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class WorkOutCloth {
     public static void main(String[] args) {
@@ -17,51 +15,50 @@ public class WorkOutCloth {
 // 조건1. lost 배열의 양 옆(-1, +1)에 빌려 줄 수 있는 사람이 있는가? 없다면 lostCnt++
 // 조건2. oneCnt가 2 이상이면 1을 빼야하나?
 //문제 상황을 적어보자
+// 문제 조건을 항상 적고 시작하자... 아오
+// 도난 당한 사람이
 // 1 2  4  6  8         3  7  10  11 12 13
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        int answer = 0;
+        Arrays.sort(lost);
+        Arrays.sort(reserve);
 
-        int[] ishasReserve = new int[n+1];
-        for(int i = 0; i <= reserve.length-1; i++){
-            if(reserve[i] == 1){
-                ishasReserve[reserve[i]+1]++;
-            }else if(reserve[i] == n){
-                ishasReserve[reserve[i]-1]++;
-            }else{
-                ishasReserve[reserve[i]-1]++;
-                ishasReserve[reserve[i]+1]++;
-            }
-        }
-
-        int oneCnt = 0; // 1개 인 것
-        int twoCnt = 0; // 2개 인 것
-        int ReserveCnt = 0;
-        for(int i = 0; i <= lost.length-1; i++){
-            if(ishasReserve[lost[i]] == 1) oneCnt++;
-            else if(ishasReserve[lost[i]] == 2) twoCnt++;
-        }
-        //실제로 빌려줄 수 있는 사람 카운트
-        for(int i = 0; i <= reserve.length-1; i++){
-            for(int j = 0; j <= lost.length-1; j++){
-                if(reserve[i] - 1 == lost[j]){
-                    ReserveCnt++;
-                    break;
-                }
-                else if(reserve[i] + 1 == lost[j]){
-                    ReserveCnt++;
+        // 빌려준 사람과 잃어버린 사람이 일치할 경우(빌려 줄 수 없음)
+        for (int i = 0; i < reserve.length; i++) {
+            for (int j = 0; j < lost.length; j++) {
+                if (reserve[i] == lost[j]) {
+                    reserve[i] = -1;
+                    lost[j] = -1;
                     break;
                 }
             }
         }
-        // 1 3  6 8     2 7 9   10  11 12
-        if(oneCnt % 2 == 0) oneCnt--;
-        int hasCnt = oneCnt + twoCnt;
-        System.out.println("hasCnt = " + hasCnt);
-        System.out.println("ReserveCnt = " + ReserveCnt);
-        int Cnt = Math.min(hasCnt, ReserveCnt);
-        answer = n - lost.length + Cnt;
 
-        return answer;
+        int count = 0;
+        // 빌려주면 lostMap에서 없애기, 해쉬 맵으로 만들어야 하나? 인덱스, 값 으로
+        for(int i = 0; i < reserve.length; i++){
+            // 이미 자기 옷을 입었거나 남에게 빌려준 사람은 건너뛰기
+            if(reserve[i] == -1) continue;
+
+            for(int j = 0; j < lost.length; j++){
+                //이미 빌린 학생은 건너뛰기
+                if(lost[j] == -1) continue;
+
+                if(reserve[i] - 1 == lost[j] || reserve[i] + 1 == lost[j]){
+                    lost[j] = -1;
+                    reserve[i] = -1;
+                    count++;
+                    break;
+                }
+            }
+        }
+
+        int realLost = 0;
+        for (int l : lost) {
+            if (l != -1) realLost++;
+        }
+
+        //전체 인원수에서 못 빌린 사람 뺀 값 리턴
+        return n - realLost;
     }
 }
