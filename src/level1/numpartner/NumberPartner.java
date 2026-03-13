@@ -1,13 +1,9 @@
 package level1.numpartner;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 public class NumberPartner {
     public static void main(String[] args) {
         Solution sol = new Solution();
-        String result = sol.solution("100", "2345");
+        String result = sol.solution("100", "203045");
         System.out.println("result = " + result);
     }
 }
@@ -15,23 +11,34 @@ public class NumberPartner {
 // HashMap으로 X, Y를 할까? 아니면 그냥 정수배열로 만들고 그걸 가지고
 class Solution {
     public String solution(String X, String Y) {
-        String answer = "";
-        Map<Integer, Integer> mapX = new HashMap<>();
-        Map<Integer, Integer> mapY = new HashMap<>();
+        StringBuilder answer = new StringBuilder();
 
-        int[] intX = X.chars().map(Character::getNumericValue).toArray();
-        int[] intY = Y.chars().map(Character::getNumericValue).toArray();
+        int[] countX = new int[10];
+        int[] countY = new int[10];
 
-        System.out.println("intX = " + Arrays.toString(intX));
-        System.out.println("intY = " + Arrays.toString(intY));
+        for (char c : X.toCharArray()) countX[c - '0']++;
+        for (char c : Y.toCharArray()) countY[c - '0']++;
 
-        for (int x : intX) mapX.put(x, mapX.getOrDefault(x, 0) + 1);
-        for (int y : intY) mapY.put(y, mapX.getOrDefault(y, 0) + 1);
+        int count = 0;
+        for(int i = 9; i >= 0; i--){
+            count = 0;
+            if(countX[i] != 0 && countY[i] != 0) count = Math.min(countX[i], countY[i]);
+            System.out.println(i + " count = " + count + "answer = " + answer);
+            if(count != 0){
+                if( i == 0 && answer.isEmpty()){
+                    answer.append(0);
+                    break;
+                }else{
+                    for(int j = 1; j <= count; j++){
+                        answer.append(i);
+                    }
+                }
+            }
+        }
+        System.out.println("answer = " + answer);
 
-        System.out.println("mapX = " + mapX);
-        System.out.println("mapY = " + mapY);
+        if(answer.isEmpty()) answer.append(-1);
 
-
-        return answer;
+        return answer.toString();
     }
 }
