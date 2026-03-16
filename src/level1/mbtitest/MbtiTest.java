@@ -1,9 +1,13 @@
 package level1.mbtitest;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class MbtiTest {
     public static void main(String[] args) {
         Solution sol = new Solution();
         String result = sol.solution( new String[]{"AN", "CF", "MJ", "RT", "NA"}, new int[]{5,3,2,7,5} );
+        System.out.println("result = " + result);
     }
 }
 // 1번: 라이언형(R), 튜브형(T)    2번: 콘형(c), 프로도형(F)    3번: 제이지형(J), 무지형(M)     4번: 어피치형(A), 네오형(N)
@@ -13,7 +17,7 @@ public class MbtiTest {
 // survey의 2글자 중 첫번째 글자는 비동의(0~2번 인덱스)
 class Solution {
     public String solution(String[] survey, int[] choices) {
-        String answer = "";
+        StringBuilder answer = new StringBuilder();
 
         // chice배열을 보고 해당하는 값 5면 해당 값들 AN이면  n쪽으로 +1
         // Choice가 4가 아닐 때 첫번째 인덱스가 A면 ~ N면 ~ / C면 ~ F면 ~ / M면 ~ J면 ~
@@ -24,18 +28,39 @@ class Solution {
 
         for(int i = 0; i < choices.length; i++){
             char survey1 = survey[i].charAt(0);
-            if(choices[i] < 4){
-                int score = switch (survey1){
-                    case 'R', 'T' -> 0;
-                    case 'C', 'F' -> 1;
-                    case 'J', 'M' -> 2;
-                    case 'A', 'N' -> 3;
-                    default -> -1;
+            int index = switch (survey1){
+                case 'R', 'T' -> 0;
+                case 'C', 'F' -> 1;
+                case 'J', 'M' -> 2;
+                case 'A', 'N' -> 3;
+                default -> -1;
+            };
+            if(choices[i] > 4){ // 매우 동의쪽 <-> 첫글자의 반대
+                int sign = switch (survey1){
+                    case 'R', 'C', 'J', 'A' -> -1;
+                    case 'T', 'F', 'M', 'N' -> 1;
+                    default -> 0;
                 };
-            }else if(choices[i] > 4){
+                mbti[index] += (choices[i] - 4) * sign;
+            }else if(choices[i] < 4){ // 매우 비동의 쪽 -> 첫 번째 글자와 동일
+                int sign = switch (survey1){
+                    case 'R', 'C', 'J', 'A' -> 1;
+                    case 'T', 'F', 'M', 'N' -> -1;
+                    default -> 0;
+                };
+                mbti[index] += (4 - choices[i]) * sign;
             }
         }
 
-        return answer;
+        if(mbti[0] >= 0) answer.append('R');
+        else answer.append('T');
+        if(mbti[1] >= 0) answer.append('C');
+        else answer.append('F');
+        if(mbti[2] >= 0) answer.append('J');
+        else answer.append('M');
+        if(mbti[3] >= 0) answer.append('A');
+        else answer.append('N');
+
+        return answer.toString();
     }
 }
